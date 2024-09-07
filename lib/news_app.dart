@@ -31,31 +31,42 @@ class _NewsAppState extends State<NewsApp> {
     fetchNews();
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("News App"),
         centerTitle: true,
       ),
-      body: FutureBuilder(
-          future: fetchNews(),
-          builder: (context, snapshot) {
+      body: FutureBuilder<NewsModel?>(
+        future: fetchNews(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: Text('No news available'));
+          } else {
+            final news = snapshot.data!;
             return ListView.builder(
+              itemCount: news.articles?.length ?? 0,
               itemBuilder: (context, index) {
+                final article = news.articles![index];
                 return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "${snapshot.data!.articles![index].urlToImage}"),
-                  ),
-                  title: Text("${snapshot.data!.articles![index].title}"),
-                  subtitle:
-                      Text("${snapshot.data!.articles![index].description}"),
+                  leading: article.urlToImage != null
+                      ? CircleAvatar(
+                          backgroundImage: NetworkImage(article.urlToImage!),
+                        )
+                      : null,
+                  title: Text(article.title ?? 'No title'),
+                  subtitle: Text(article.description ?? 'No description'),
                 );
               },
-              itemCount: snapshot.data!.articles!.length,
             );
-          }),
+          }
+        },
+      ),
     );
   }
 }
