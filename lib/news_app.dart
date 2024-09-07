@@ -27,8 +27,8 @@ class _NewsAppState extends State<NewsApp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    fetchNews();
   }
 
   @override
@@ -41,17 +41,20 @@ class _NewsAppState extends State<NewsApp> {
       body: FutureBuilder(
           future: fetchNews(),
           builder: (context, snapshot) {
-            return ListView.builder(itemBuilder: (context, index) {
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      "${snapshot.data!.articles![index].urlToImage}"),
-                ),
-                title: Text("${snapshot.data!.articles![index].title}"),
-                subtitle: Text("${snapshot.data!.articles![index].description}"),
-              );
-            },
-            itemCount: snapshot.data!.articles!.length,);
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        "${snapshot.data!.articles![index].urlToImage}"),
+                  ),
+                  title: Text("${snapshot.data!.articles![index].title}"),
+                  subtitle:
+                      Text("${snapshot.data!.articles![index].description}"),
+                );
+              },
+              itemCount: snapshot.data!.articles!.length,
+            );
           }),
     );
   }
