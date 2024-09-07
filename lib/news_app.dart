@@ -13,7 +13,7 @@ class NewsApp extends StatefulWidget {
 
 class _NewsAppState extends State<NewsApp> {
   Future<NewsModel> fetchNews() async {
-    final url =
+    const url =
         "https://newsapi.org/v2/everything?q=tesla&from=2024-08-06&sortBy=publishedAt&apiKey=0c0db177b5a14ec2a75c4566c7d0bf0b";
     var responce = await http.get(Uri.parse(url));
 
